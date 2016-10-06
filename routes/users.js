@@ -5,18 +5,29 @@ const router = express.Router();
 const knex = require('../db/knex');
 const bcrypt = require('bcrypt');
 const flash = require('flash');
-const Users = function() {
-  return knex('users')
-};
 
-router.get('/', function(req, res) {
+// function authorizedUser(res, res, next){
+//   let userID =
+// }
+
+router.get('/', function(req, res, next) {
   res.render('users/all')
 })
 
+
+//This should show users info, posts, and comments
 router.get('/:id', function (req, res) {
   let userID = req.params.id;
-  Users.where('id', userID).first().then(function (user){
-    res.render('users/single', {user: user})
+  knex('users').where('id', userID).first().then(function (user){
+    knex('posts').where('user_id', userID).then(function (posts){
+      knex('comments').where('user_id', userID).then(function (comments){
+        res.render('users/single', {
+          user: user,
+          posts: posts,
+          comments: comments,
+        })
+      })
+    })
   })
 })
 

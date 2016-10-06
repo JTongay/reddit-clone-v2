@@ -4,18 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Single</title>
+  <title>Posts</title>
 </head>
 <body>
-  <h2>This is a single users page</h2>
-  <h2><%=user.username %></h2>
+  <h2>Here are the posts</h2>
+  <ul>
   <% posts.forEach(function (post) { %>
-      <h2>posts:</h2>
-      <h3><%=post.title %></h3>
+    <li><%=post.title  %></li>
+    <li>by: <%=post.username %></li>
   <% }) %>
-  <h2>comments:</h2>
-  <% comments.forEach(function (comment) { %>
-      <h3><%=comment.content %></h3>
-  <% }) %>
+  </ul>
 </body>
 </html>

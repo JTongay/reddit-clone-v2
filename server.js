@@ -6,7 +6,10 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 //db
-const knex = require('./db/knex');
+// const knex = require('./db/knex');
+const environment = process.env.NODE_ENV;
+const config = require('./knexfile.js')[environment];
+const knex = require('knex')(config);
 
 // Middlewares
 const bodyParser = require('body-parser');
@@ -15,6 +18,9 @@ const methodOverride = require('method-override');
 
 // Routes
 const users = require('./routes/users');
+const auth = require('./routes/auth');
+const posts = require('./routes/posts');
+
 
 // Use Middlewares
 app.set('view engine', 'ejs');
@@ -29,6 +35,9 @@ app.use(require('flash')());
 
 // Use Routes
 app.use('/users', users);
+app.use('/auth', auth);
+app.use('/posts', posts);
+
 
 
 app.listen(port, function () {
