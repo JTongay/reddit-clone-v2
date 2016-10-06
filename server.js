@@ -10,12 +10,11 @@ const knex = require('./db/knex');
 
 // Middlewares
 const bodyParser = require('body-parser');
-const router = express.Router();
 const cookieSession = require('cookie-session');
 const methodOverride = require('method-override');
 
 // Routes
-// const auth = require('./routes/auth');
+const users = require('./routes/users');
 
 // Use Middlewares
 app.set('view engine', 'ejs');
@@ -26,7 +25,14 @@ app.use(bodyParser.json());
 app.use(cookieSession({
   secret: "booyah",
 }))
+app.use(require('flash')());
+
+// Use Routes
+app.use('/users', users);
 
 
+app.listen(port, function () {
+  console.log('hello from', port);
+});
 
 module.exports = app;
