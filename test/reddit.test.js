@@ -38,4 +38,15 @@ describe('Users', function () {
             done();
           })
  })
+ it('should display a single user', function (done) {
+   request.get('/users/1')
+          .expect(200)
+          .end(function(err, res) {
+            if(err){
+              done(err)
+            }
+            expect(res.text).to.contain("All the users")
+            done();
+          })
+ })
 })
