@@ -6,6 +6,26 @@ const bcrypt = require('bcrypt');
 const flash = require('flash');
 // const Users = function() { return knex('users') };
 
+function authorizedUser(req, res, next) {
+  //
+  let userID = req.session.user.id;
+  if(userID){
+    next();
+  } else {
+    res.redirect('/')
+  }
+
+}
+
+function authorizedAdmin(req, res, next) {
+  //
+}
+
+router.get('/', function (req, res, next) {
+  let user = req.session.user;
+  res.render('users/auth', {user: user})
+})
+
 router.get('/signup', function (req, res, next) {
   res.render('users/signup')
 })
@@ -47,7 +67,8 @@ router.post('/login', function (req, res, next) {
         if(result){
           req.session.user = user;
           res.cookie("loggedin", true);
-          res.redirect('/users');
+          console.log(req.session.user.id);
+          res.redirect('/auth');
         } else {
           res.redirect('/auth/login')
         }
@@ -56,7 +77,7 @@ router.post('/login', function (req, res, next) {
   })
 })
 
-router.post('/logout', function (req, res) {
+router.get('/logout', function (req, res) {
   req.session = null;
   res.clearCookie('loggedin');
   res.redirect('/auth/login');

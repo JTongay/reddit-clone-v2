@@ -19,7 +19,7 @@ describe('Landing Page', function () {
             if(err){
               done(err);
             }
-            expect(res.text).to.contain("Welcome to the landing page")
+            expect(res.text).to.contain("Welcome to the front page")
             done();
           })
  })
@@ -108,6 +108,158 @@ describe('Posts', function () {
               expect(res.text).to.contain(posts[2].username);
               done();
             })
+          })
+ })
+ it('Should display a single post with author and all comments if there are any', function (done) {
+   request.get('/posts/1')
+          .expect(200)
+          .end(function (err, res) {
+            if(err){
+              done(err);
+            }
+            knex('users').select(['users.username', 'posts.title', 'posts.body', 'comments.content'])
+                        .where('posts.id', 1).innerJoin('posts', 'users.id', 'posts.user_id')
+                        .innerJoin('comments', 'users.id', 'comments.user_id')
+                        .then(function (post) {
+                            expect(res.text).to.include(post[0].username)
+                            expect(res.text).to.include(post[0].title)
+                            done();
+                          })
+          })
+ })
+ it('Should display a single post with author but no comments if there arent any', function (done) {
+   request.get('/posts/2')
+          .expect(200)
+          .end(function (err, res) {
+            if(err){
+              done(err);
+            }
+            knex('users').select(['users.username', 'posts.title', 'posts.body', 'comments.content'])
+                        .where('posts.id', 2).innerJoin('posts', 'users.id', 'posts.user_id')
+                        .innerJoin('comments', 'users.id', 'comments.user_id')
+                        .then(function (post) {
+                            expect(res.text).to.include('there are no comments')
+                            done();
+                          })
+          })
+ })
+
+})
+
+describe('Add Account', function () {
+  after(function (done) {
+    knex('users').where('username', 'testing').first().del().then(function(data){
+      done();
+    })
+  })
+ it('Should show the sign up page', function (done) {
+   request.get('/auth/signup')
+          .expect(200)
+          .end(function (err, res) {
+            if(err){
+              done(err)
+            }
+            expect(res.text).to.contain('Sign Up Page');
+            done();
+          })
+ })
+ it('Should add a new account to the database', function (done) {
+   request.post('/auth/signup')
+          .send({
+            username: 'testing',
+            email: 'ididit@yahoo.com',
+            hashed_password: 'partytime'
+          })
+          .end(function (err, res) {
+            if(err){
+              done(err)
+            }
+            knex('users').where('username', 'testing').first().then(function (user) {
+              expect(user.username).to.equal('testing');
+              expect(user.email).to.equal('ididit@yahoo.com');
+              expect(user.admin).to.equal(false);
+              done();
+            })
+
+          })
+ })
+ it('Should not add a new account to the database if the username is taken', function (done) {
+   request.post('/auth/signup')
+          .send({
+            username: 'batman',
+            email: 'imnotbatman@gmail.com',
+            hashed_password: 'password'
+          })
+          .end(function (err, res) {
+            if(err){
+              done(err)
+            }
+            expect(res.text).to.contain("Redirecting to /users");
+            done();
+          })
+ })
+})
+
+xdescribe('POST comment', function () {
+  after(function (done) {
+    knex('posts').where('content', 'This is a test').first().del().then(function (stuff){
+      done();
+    })
+  })
+ it('should add a comment', function (done) {
+  request.post('/posts/1')
+          .send({
+            post_id: 1,
+            content: 'This is a test',
+            user_id: 2
+          })
+          .end(function (err, res) {
+            if(err){
+              done(err);
+            }
+            request.get('/posts/1')
+              .expect(200)
+              .end(function (err, res) {
+                if(err){
+                  done(err);
+                }
+                expect(res.text).to.contain('This is a test');
+                done()
+              })
+          })
+ })
+})
+
+xdescribe('POST post', function () {
+
+ it('should take you to the create new post page', function (done) {
+   request.get('/posts/new')
+          .expect(200)
+          .end(function (err, res) {
+            expect(res.text).to.contain('Add a new post')
+            done();
+          })
+ })
+ it('should POST a new post', function (done) {
+   request.post('/posts')
+          .send({
+            title: 'testing',
+            body: 123,
+            user_id: 2
+          })
+          .end(function (err, res) {
+            if(err){
+              done(err)
+            }
+            request.get('/posts')
+                .expect(200)
+                .end(function (err, res) {
+                  if(err){
+                    done(err)
+                  }
+                  expect(res.text).to.contain('testing')
+                  done();
+                })
           })
  })
 })
