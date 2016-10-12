@@ -10,6 +10,9 @@
     "test": "NODE_ENV=test mocha",
     "start": "node server.js"
   },
+  "engines": {
+    "node": "6.4.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JTongay/reddit-clone-v2.git"
