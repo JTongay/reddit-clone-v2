@@ -8,7 +8,10 @@
   },
   "scripts": {
     "test": "NODE_ENV=test mocha",
-    "start": "node server.js"
+    "start": "node server.js",
+    "heroku-postbuild": "knex migrate:latest",
+
+
   },
   "engines": {
     "node": "6.4.0"
