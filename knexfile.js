@@ -21,8 +21,7 @@ module.exports = {
   production: {
     client: 'pg',
     connection: {
-      database: 'reddit-clone-v2-dev',
-      host: 'https://reddit-clone-jtongay.herokuapp.com/'
+      database: 'reddit-clone-v2-dev'
     }
   }
 
