@@ -21,7 +21,7 @@ module.exports = {
   production: {
     client: 'Heroku Postgres',
     connection: {
-      database: 'reddit-clone-v2-dev',
+      database: 'postgres://jkyldtsrmwmvbs:AdI_cvntxzIDpx39tn_sJd6LNB@ec2-23-21-102-155.compute-1.amazonaws.com:5432/datd6m4n33gc5e',
       host: 'ec2-23-21-102-155.compute-1.amazonaws.com',
       user: 'jkyldtsrmwmvbs',
       password: 'AdI_cvntxzIDpx39tn_sJd6LNB'
