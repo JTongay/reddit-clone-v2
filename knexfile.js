@@ -18,6 +18,14 @@ module.exports = {
     }
   },
 
+  production: {
+    client: 'pg',
+    connection: {
+      database: 'reddit-clone-v2-pro',
+      host: 'https://reddit-clone-jtongay.herokuapp.com/'
+    }
+  }
+
   // production: {
   //   client: 'postgresql',
   //   connection: {
